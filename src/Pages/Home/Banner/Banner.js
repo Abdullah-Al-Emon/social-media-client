@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+// import da from 'date-fns/esm/locale/da/index.js';
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '../../../Context/AuthProvider';
@@ -7,9 +9,13 @@ const Banner = () =>
     const { user } = useContext(AuthContext)
     const { register, formState: { errors }, handleSubmit } = useForm();
     const imageHostKey = process.env.REACT_APP_imgbb_key;
+    const todayDate = new Date()
+    const date = format(todayDate, 'PP');
+    // console.log(date)
 
     const handleAddProducts = (data) =>
     {
+        
         const image = data.image[0]
         const formData = new FormData();
         formData.append('image', image)
@@ -20,7 +26,27 @@ const Banner = () =>
         })
         .then(res => res.json())
         .then(imgData => {
-            console.log(imgData.data.url)
+            // console.log(imgData.data.url)
+            const post = {
+                postName: user?.name,
+                PosterPhotoUrl: user?.photoURL,
+                postDate: date,
+                postPhoto: imgData.data.url,
+                postDescription: data.description,
+                like: 0
+            }
+            fetch('https://social-media-server-abdullah-al-emon.vercel.app/post',{
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify(post)
+            })
+            .then(res => res.json())
+            .then( result => {
+                console.log(result)
+
+            })
 
         })
         

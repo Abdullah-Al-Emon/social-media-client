@@ -28,12 +28,13 @@ const Banner = () =>
         .then(imgData => {
             // console.log(imgData.data.url)
             const post = {
-                postName: user?.name,
+                posterName: user?.displayName,
                 PosterPhotoUrl: user?.photoURL,
                 postDate: date,
                 postPhoto: imgData.data.url,
                 postDescription: data.description,
-                like: 0
+                like: 0,
+                comment: 0
             }
             fetch('https://social-media-server-abdullah-al-emon.vercel.app/post',{
                 method: 'POST',
